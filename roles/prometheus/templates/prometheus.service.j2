@@ -1,0 +1,22 @@
+[Unit]
+Description=Prometheus Service
+
+[Service]
+User={{ service_identifier }}
+Group={{ service_identifier }}
+WorkingDirectory={{ prometheus_home_dir }}
+ExecStart={{ prometheus_bin_dir }}/{{ service_identifier }} \
+    --config.file {{ prometheus_config_file_path }} \
+    --storage.tsdb.path {{ prometheus_data_dir }} \
+    --storage.tsdb.retention.time=20d \
+    --web.config.file {{ prometheus_web_config_file_path }} \
+    --web.listen-address="{{ prometheus_web_listen_address }}"
+Restart=always
+RestartSec=4
+LimitNOFILE=65536
+MemoryMax=64G
+StandardOutput=append:{{ prometheus_log_file_path }}
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
