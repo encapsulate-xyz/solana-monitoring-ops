@@ -1,0 +1,6 @@
+---
+all:
+  children:
+    monitor:
+      hosts:
+        monitor.encapsulate.xyz:
