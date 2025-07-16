@@ -1,40 +1,93 @@
 ---
-# maintains ports, bianry or repo urls
-
 org: encapsulate
+system_arch: linux-amd64
+tmp_dir: /tmp
+
 domain_regex: ^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$
-monitor_server_dns: monitor.encapsulate.xyz
+
 ansible_port: 8192
 
 architecture_map:
   x86_64: amd64
   aarch64: arm64
 
-default_node_types:
-  - validator
-  - default
+# ====================================================================
+# Role: Alert Manager
+# ====================================================================
+alert_manager:
+  service_identifier: alert-manager
+  source_url: https://github.com/prometheus/alertmanager/releases/download
+  file_extension: tar.gz
+  ports:
+    web_external_port: 9093
+  smtp_smarthost: smtp.gmail.com:587
+  smtp_sender: bot@encapsulate.xyz
+  smtp_receiver: team@encapsulate.xyz
 
-tmp_dir: /tmp
+# ====================================================================
+# Role: Grafana
+# ====================================================================
+grafana:
+  service_identifier: grafana
+  source_url: https://dl.grafana.com/oss/release
+  file_extension: tar.gz
+  admin_user: "{{ org }}-grafana"
+  admin_email: team@encapslate.xyz
+  ports:
+    http_port: 3000
 
-go:
-  root: /usr/local/go
-  path: "{{ tmp_dir }}/go"
-  module111: "on"
+# ====================================================================
+# Role: Loki
+# ====================================================================
+loki:
+  service_identifier: loki
+  source_url: https://github.com/grafana/loki/releases/download
+  file_extension: zip
+  ports:
+    http_listen_port: 3100
+    grpc_listen_port: 3101
 
-sui:
-  validator:
-    source_url: https://releases.sui.io
-    ports:
-      server_listen_port: 9191
-      metrics_port: 9186
-  fullnode:
-    version: 88888888888
-    source_url: https://releases.sui.io
-    ports:
-      server_listen_port: 9191
-      metrics_port: 9186
-  bridge:
-    source_url: https://releases.sui.io
-    ports:
-      server_listen_port: 9191
-      metrics_port: 9186
+# ====================================================================
+# Role: Prometheus
+# ====================================================================
+prometheus:
+  service_identifier: prometheus
+  source_url: https://github.com/prometheus/prometheus/releases/download
+  file_extension: tar.gz
+  ports:
+    web_listen_address: 9090
+
+# ====================================================================
+# Role: Node Exporter
+# ====================================================================
+node_exporter:
+  service_identifier: node-exporter
+  source_url: https://github.com/prometheus/node_exporter/releases/download
+  file_extension: tar.gz
+  ports:
+    web_listen_address: 9100
+
+# ====================================================================
+# Role: Promtail
+# ====================================================================
+promtail:
+  service_identifier: promtail
+  source_url: https://github.com/grafana/loki/releases/download
+  file_extension: zip
+  ports:
+    http_listen_port: 9080
+    grpc_listen_port: 9081
+
+# ====================================================================
+# Role: Solana Exporter
+# ====================================================================
+solana_exporter:
+  service_identifier: solana-exporter
+  source_url: https://github.com/qskyhigh/solana-monitor-public
+  ports:
+    metric_port: 1234
+  validator_rpc_endpoint: http://localhost:8899
+  network_rpc_endpoint: https://api.testnet.solana.com
+  pub_key:
+  vote_pub_key:
+  solana_binary_path: /opt/solana/bin/solana
