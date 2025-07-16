@@ -1,0 +1,88 @@
+# pagerduty only sends calls when Alert Severity is Critical, Error or Not Available
+# on Warning and Info, a call wont be generated
+
+global:
+  # How long to wait before marking an alert as resolved after it stops firing.
+  resolve_timeout: 5m
+
+# The directory from which notification templates are read.
+# https://prometheus.io/docs/alerting/latest/notification_examples
+# https://prometheus.io/blog/2016/03/03/custom-alertmanager-templates
+templates:
+ - '{{ alert_manager_template_file_path }}'
+
+# The root route on which each incoming alert enters.
+route:
+  # The labels by which incoming alerts are grouped together. For example,
+  # multiple alerts coming in for cluster=A and alertname=LatencyHigh would
+  # be batched into a single group.
+  #
+  # To aggregate by all possible labels use '...' as the sole label name.
+  # This effectively disables aggregation entirely, passing through all
+  # alerts as-is. This is unlikely to be what you want, unless you have
+  # a very low alert volume or your upstream notification system performs
+  # its own grouping. Example: group_by: [...]
+  group_by: ['alertname']
+
+  # When a new group of alerts is created by an incoming alert, wait at
+  # least 'group_wait' to send the initial notification.
+  # This way ensures that you get multiple alerts for the same group that start
+  # firing shortly after another are batched together on the first
+  # notification.
+  group_wait: 20s
+
+  # When the first notification was sent, wait 'group_interval' to send a batch
+  # of new alerts that started firing for that group.
+  group_interval: 4m
+
+  # If an alert has successfully been sent, wait 'repeat_interval' to
+  # resend them.
+  repeat_interval: 20m
+
+   # A default receiver
+  receiver: low_urgency_pagerduty
+
+  # All the above attributes are inherited by all child routes and can
+  # overwritten on each.
+
+  # The child route trees.
+  routes:
+    # This routes performs a regular expression match on alert labels to
+    # catch alerts that are related to a list of services.
+    - matchers:
+        - job="node_exporter"
+      # The service has a sub-route for critical alerts, any alerts
+      # that do not match, i.e. severity != critical, fall-back to the
+      # parent node and are sent to 'default-pagerduty'
+      routes:
+        - matchers:
+            - severity="critical"
+          receiver: node_exporter_pagerduty
+          group_by: ['instance']
+
+    - matchers:
+        - project="solana"
+        - severity="critical"
+      receiver: 'solana_pagerduty'
+
+    # Default route for critical alerts to default-pagerduty
+    - matchers:
+        - severity="critical"
+      receiver: default_pagerduty
+
+receivers:
+  - name: 'default_pagerduty'
+    pagerduty_configs:
+      - routing_key: '{{ vault.default.pagerduty.default_routing_key }}'
+
+  - name: 'low_urgency_pagerduty'
+    pagerduty_configs:
+      - routing_key: '{{ vault.default.pagerduty.low_urgency_routing_key }}'
+
+  - name: 'node_exporter_pagerduty'
+    pagerduty_configs:
+      - routing_key: '{{ vault.default.pagerduty.node_exporter_routing_key }}'
+
+  - name: 'solana_pagerduty'
+    pagerduty_configs:
+      - routing_key: '{{ vault.default.pagerduty.solana_routing_key }}'

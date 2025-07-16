@@ -1,0 +1,22 @@
+---
+alert_manager_home_dir: /opt/{{ service_identifier }}
+
+alert_manager_bin_dir: "{{ alert_manager_home_dir }}/bin"
+alert_manager_log_dir: "{{ alert_manager_home_dir }}/log"
+alert_manager_config_dir: "{{ alert_manager_home_dir }}/config"
+alert_manager_template_dir: "{{ alert_manager_home_dir }}/template"
+
+alert_manager_directories:
+  - "{{ alert_manager_home_dir }}"
+  - "{{ alert_manager_bin_dir }}"
+  - "{{ alert_manager_config_dir }}"
+  - "{{ alert_manager_template_dir }}"
+  - "{{ alert_manager_log_dir }}"
+
+alert_manager_log_file_path: "{{ alert_manager_log_dir }}/{{ service_identifier }}.log"
+
+alert_manager_config_file_path: "{{ alert_manager_config_dir }}/{{ alert_manager_config_file_name }}"
+
+alert_manager_web_config_file_path: "{{ alert_manager_config_dir }}/{{ alert_manager_web_config_file_name }}"
+
+alert_manager_template_file_path: "{{ alert_manager_template_dir }}/{{ alert_manager_template_file_name }}"

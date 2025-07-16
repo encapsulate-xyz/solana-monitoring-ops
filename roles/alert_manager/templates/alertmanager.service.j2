@@ -1,0 +1,21 @@
+[Unit]
+Description=AlertManager Service
+
+[Service]
+User={{ service_identifier }}
+Group={{ service_identifier }}
+WorkingDirectory={{ alert_manager_home_dir }}
+ExecStart={{ alert_manager_bin_dir }}/{{ service_identifier }} \
+    --config.file {{ alert_manager_config_file_path }} \
+    --web.config.file {{ alert_manager_web_config_file_path }} \
+    --web.external-url={{ alert_manager_web_external_url }} \
+    --cluster.listen-address=""
+Restart=always
+RestartSec=4
+LimitNOFILE=65536
+MemoryMax=64G
+StandardOutput=append:{{ alert_manager_log_file_path }}
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target
