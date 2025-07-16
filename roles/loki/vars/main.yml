@@ -1,0 +1,4 @@
+---
+loki_default_binary_name: loki-{{ ansible_system | lower }}-{{ architecture_map.get(ansible_architecture, ansible_architecture) }}
+loki_config_file_name: config.yml
+loki_alert_manager_url: http://{{ vault.default.auth_user }}:{{ vault.loki.alert_manager_auth_password }}@localhost:{{ alert_manager.ports.web_external_port }}

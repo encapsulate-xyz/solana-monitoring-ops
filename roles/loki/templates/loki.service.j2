@@ -1,0 +1,17 @@
+[Unit]
+Description=Loki service
+After=network.target
+
+[Service]
+User={{ service_identifier }}
+Group={{ service_identifier }}
+ExecStart={{ loki_bin_dir }}/{{ service_identifier }} -config.file {{ loki_config_file_path }}
+Restart=always
+RestartSec=4
+LimitNOFILE=65536
+MemoryMax=64G
+StandardOutput=append:{{ loki_log_file_path }}
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target

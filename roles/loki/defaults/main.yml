@@ -1,0 +1,35 @@
+---
+loki_home_dir: /opt/{{ service_identifier }}
+
+loki_alert_dir: "{{ loki_home_dir }}/alert"
+loki_bin_dir: "{{ loki_home_dir }}/bin"
+loki_config_dir: "{{ loki_home_dir }}/config"
+loki_data_dir: "{{ loki_home_dir }}/data"
+loki_log_dir: "{{ loki_home_dir }}/log"
+
+loki_chunks_dir: "{{ loki_data_dir }}/chunks"
+loki_rules_dir: "{{ loki_data_dir }}/rules"
+loki_retention_dir: "{{ loki_data_dir }}/retention"
+loki_tsdb_shipper_active_dir: "{{ loki_data_dir }}/tsdb-shipper-active"
+loki_tsdb_shipper_cache_dir: "{{ loki_data_dir }}/tsdb-shipper-cache"
+loki_wal_dir: "{{ loki_data_dir }}/wal"
+
+loki_fake_dir: "{{ loki_alert_dir }}/fake"
+
+loki_directories:
+  - "{{ loki_home_dir }}"
+  - "{{ loki_alert_dir }}"
+  - "{{ loki_bin_dir }}"
+  - "{{ loki_config_dir }}"
+  - "{{ loki_data_dir }}"
+  - "{{ loki_log_dir }}"
+  - "{{ loki_chunks_dir }}"
+  - "{{ loki_rules_dir }}"
+  - "{{ loki_retention_dir }}"
+  - "{{ loki_tsdb_shipper_active_dir }}"
+  - "{{ loki_tsdb_shipper_cache_dir }}"
+  - "{{ loki_wal_dir }}"
+  - "{{ loki_fake_dir }}"
+
+loki_log_file_path: "{{ loki_log_dir }}/{{ service_identifier }}.log"
+loki_config_file_path: "{{ loki_config_dir }}/{{ loki_config_file_name }}"

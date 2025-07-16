@@ -1,0 +1,14 @@
+---
+- name: Install Loki
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    service_identifier: "{{ loki.service_identifier }}"
+  vars_files:
+    - group_vars/all.yml
+    - group_vars/default.yml
+    - group_vars/vault.yml
+  roles:
+    - common
+    - loki
