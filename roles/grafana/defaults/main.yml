@@ -1,0 +1,20 @@
+---
+grafana_home_dir: /opt/{{ service_identifier }}
+
+grafana_bin_dir: "{{ grafana_home_dir }}/bin"
+grafana_log_dir: "{{ grafana_home_dir }}/log"
+grafana_data_dir: "{{ grafana_home_dir }}/data"
+grafana_config_dir: "{{ grafana_home_dir }}/conf"
+grafana_plugins_dir: "{{ grafana_home_dir }}/plugins"
+grafana_provisioning_dir: "{{ grafana_home_dir }}/provisioning"
+
+grafana_directories:
+  - "{{ grafana_home_dir }}"
+  - "{{ grafana_bin_dir }}"
+  - "{{ grafana_config_dir }}"
+  - "{{ grafana_log_dir }}"
+  - "{{ grafana_plugins_dir }}"
+  - "{{ grafana_provisioning_dir }}"
+
+grafana_log_file_path: "{{ grafana_log_dir }}/{{ service_identifier }}.log"
+grafana_config_file_path: "{{ grafana_config_dir }}/{{ grafana_config_file_name }}"

@@ -1,0 +1,7 @@
+---
+grafana_ufw_rules:
+  - port: "{{ grafana.ports.http_port }}"
+    proto: tcp
+    rule: allow
+    from: any
+    comment: grafana
