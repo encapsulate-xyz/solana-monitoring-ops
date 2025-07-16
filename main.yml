@@ -1,0 +1,21 @@
+---
+- name: Import setup_alert_manager playbook
+  ansible.builtin.import_playbook: setup_alert_manager.yml
+
+- name: Import setup_grafana playbook
+  ansible.builtin.import_playbook: setup_grafana.yml
+
+- name: Import setup_loki playbook
+  ansible.builtin.import_playbook: setup_loki.yml
+
+- name: Import setup_node_exporter playbook
+  ansible.builtin.import_playbook: setup_node_exporter.yml
+
+- name: Import setup_prometheus playbook
+  ansible.builtin.import_playbook: setup_prometheus.yml
+
+- name: Import setup_promtail playbook
+  ansible.builtin.import_playbook: setup_promtail.yml
+
+- name: Import setup_solana_exporter playbook
+  ansible.builtin.import_playbook: setup_solana_exporter.yml
