@@ -3,4 +3,4 @@ all:
   children:
     monitor:
       hosts:
-        monitor.encapsulate.xyz:
+        validator.solana.mainnet.encapsulate.xyz:
