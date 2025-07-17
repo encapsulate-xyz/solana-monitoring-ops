@@ -90,4 +90,4 @@ solana_exporter:
   network_rpc_endpoint: https://api.testnet.solana.com
   pub_key:
   vote_pub_key:
-  solana_binary_path: /opt/solana/bin/solana
+  solana_binary_path: /opt/solana/bin/solana-cli
