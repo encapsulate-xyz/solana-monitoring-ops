@@ -1,0 +1,37 @@
+---
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    shell: "{{ shell | default('/usr/sbin/nologin') }}"
+    groups: "{{ user_groups | default(omit) }}"
+    create_home: "{{ create_home | default(true) }}"
+    system: "{{ is_system_user | default(true) }}"
+    home: "{{ home | default(omit) }}"
+    password: "{{ user_password | default(omit) | password_hash('sha512') }}"
+    state: present
+
+- name: Allow passwordless sudo for user
+  ansible.builtin.copy:
+    content: "{{ user_name }} ALL=(ALL) NOPASSWD: ALL"
+    dest: /etc/sudoers.d/{{ user_name }}
+    owner: root
+    group: root
+    mode: "0440"
+  when: allow_passwordless_sudo | default(false)
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
+  loop: "{{ directories }}"
+
+- name: Create log file for the service
+  ansible.builtin.file:
+    path: "{{ log_file_path }}"
+    state: touch
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"

@@ -1,0 +1,18 @@
+[Unit]
+Description=Grafana Service
+
+[Service]
+User={{ service_identifier }}
+Group={{ service_identifier }}
+WorkingDirectory={{ grafana_home_dir }}
+ExecStart={{ grafana_bin_dir }}/{{ service_identifier }} server \
+    --config={{ grafana_config_file_path }}
+Restart=always
+RestartSec=4
+LimitNOFILE=65536
+MemoryMax=64G
+StandardOutput=append:{{ grafana_log_file_path }}
+StandardError=inherit
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,6 @@
+---
+all:
+  children:
+    monitor:
+      hosts:
+        validator.solana.mainnet.encapsulate.xyz:

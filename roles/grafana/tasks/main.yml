@@ -1,0 +1,58 @@
+---
+- name: Include the ufw rules vars file
+  ansible.builtin.include_vars:
+    file: vars/ufw_rules.yml
+
+- name: Apply UFW rules
+  ansible.builtin.include_tasks: tasks/apply_ufw_rules.yml
+  loop: "{{ grafana_ufw_rules }}"
+
+- name: Include user creation task for grafana
+  ansible.builtin.include_tasks: tasks/create_user_and_directories.yml
+  vars:
+    home: "{{ grafana_home_dir }}"
+    directories: "{{ grafana_directories }}"
+    log_file_path: "{{ grafana_log_file_path }}"
+
+- name: Include Download, Unarchive and Copy Binary task
+  ansible.builtin.include_tasks: extract_binary.yml
+  vars:
+    arch_details: "{{ ansible_system | lower }}-{{ architecture_map.get(ansible_architecture, ansible_architecture) }}"
+    extracted_binary_dir: "{{ grafana_default_binary_name }}-v{{ grafana.version }}"
+    source_url: "{{ grafana.source_url }}"
+    suffix_url: "{{ grafana_default_binary_name }}-{{ grafana.version }}.{{ arch_details }}.{{ grafana.file_extension }}"
+    binary_dest_path: "{{ grafana_home_dir }}"
+    extracted_binary_path: "{{ extracted_binary_dir }}"
+
+- name: Copy grafana config
+  ansible.builtin.template:
+    src: config.ini.j2
+    dest: "{{ grafana_config_file_path }}"
+    owner: "{{ service_identifier }}"
+    group: "{{ service_identifier }}"
+    mode: "0644"
+  notify:
+    - Restart service
+
+- name: Copy grafana service file
+  ansible.builtin.template:
+    src: grafana.service.j2
+    dest: /etc/systemd/system/{{ service_identifier }}.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload service
+    - Restart service
+
+- name: Install Grafana plugins
+  community.grafana.grafana_plugin:
+    name: "{{ item }}"
+    version: latest
+    state: present
+    grafana_plugins_dir: "{{ grafana_plugins_dir }}"
+  environment:
+    PATH: "{{ grafana_bin_dir }}:{{ ansible_env.PATH }}"
+  notify:
+    - Restart service
+  loop: "{{ grafana_plugins }}"

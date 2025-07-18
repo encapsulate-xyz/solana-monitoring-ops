@@ -1,0 +1,58 @@
+---
+- name: Include user creation task for alert_manager
+  ansible.builtin.include_tasks: tasks/create_user_and_directories.yml
+  vars:
+    home: "{{ alert_manager_home_dir }}"
+    directories: "{{ alert_manager_directories }}"
+    log_file_path: "{{ alert_manager_log_file_path }}"
+
+- name: Include Download, Unarchive and Copy Binary task
+  ansible.builtin.include_tasks: tasks/extract_binary.yml
+  vars:
+    system_arch: "{{ ansible_system | lower }}-{{ architecture_map[ansible_architecture] }}"
+    extracted_binary_dir: "{{ alert_manager_default_binary_name }}-{{ alert_manager.version }}.{{ system_arch }}"
+    source_url: "{{ alert_manager.source_url }}/v{{ alert_manager.version }}"
+    suffix_url: "{{ alert_manager_default_binary_name }}-{{ alert_manager.version }}.{{ system_arch }}.{{ alert_manager.file_extension }}"
+    binary_dest_path: "{{ alert_manager_bin_dir }}/{{ service_identifier }}"
+    extracted_binary_path: "{{ extracted_binary_dir }}/{{ alert_manager_default_binary_name }}"
+
+- name: Copy Alert Manager config
+  ansible.builtin.template:
+    src: alertmanager_config.yml.j2
+    dest: "{{ alert_manager_config_file_path }}"
+    owner: "{{ service_identifier }}"
+    group: "{{ service_identifier }}"
+    mode: "0644"
+  notify:
+    - Restart service
+
+- name: Copy alert manager pagerduty template
+  ansible.builtin.copy:
+    src: pagerduty.tmpl
+    dest: "{{ alert_manager_template_file_path }}"
+    owner: "{{ service_identifier }}"
+    group: "{{ service_identifier }}"
+    mode: "0644"
+  notify:
+    - Restart service
+
+- name: Copy Alert Manager web config
+  ansible.builtin.template:
+    src: web_config.yml.j2
+    dest: "{{ alert_manager_web_config_file_path }}"
+    owner: "{{ service_identifier }}"
+    group: "{{ service_identifier }}"
+    mode: "0644"
+  notify:
+    - Restart service
+
+- name: Copy Alert Manager service file
+  ansible.builtin.template:
+    src: alertmanager.service.j2
+    dest: /etc/systemd/system/{{ service_identifier }}.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload service
+    - Restart service

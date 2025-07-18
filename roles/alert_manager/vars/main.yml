@@ -1,0 +1,10 @@
+---
+alert_manager_default_binary_name: alertmanager
+
+alert_manager_config_file_name: config.yml
+
+alert_manager_web_config_file_name: web.yml
+
+alert_manager_template_file_name: pagerduty.tmpl
+
+alert_manager_web_external_url: http://localhost:{{ alert_manager.ports.web_external_port }}

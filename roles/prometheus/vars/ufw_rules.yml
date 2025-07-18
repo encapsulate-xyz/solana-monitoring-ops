@@ -1,0 +1,7 @@
+---
+prometheus_ufw_rules:
+  - port: "{{ prometheus.ports.web_listen_address }}"
+    proto: tcp
+    rule: allow
+    from: any
+    comment: prometheus

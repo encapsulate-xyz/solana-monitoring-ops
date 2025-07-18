@@ -1,0 +1,37 @@
+---
+- name: Include user creation task for loki
+  ansible.builtin.include_tasks: tasks/create_user_and_directories.yml
+  vars:
+    home: "{{ loki_home_dir }}"
+    directories: "{{ loki_directories }}"
+    log_file_path: "{{ loki_log_file_path }}"
+
+- name: Include Download, Unarchive and Copy Binary task
+  ansible.builtin.include_tasks: tasks/extract_binary.yml
+  vars:
+    extracted_binary_dir: "{{ loki_default_binary_name }}"
+    source_url: "{{ loki.source_url }}/v{{ loki.version }}"
+    suffix_url: "{{ loki_default_binary_name }}.{{ loki.file_extension }}"
+    binary_dest_path: "{{ loki_bin_dir }}/{{ service_identifier }}"
+    extracted_binary_path: "{{ loki_default_binary_name }}"
+
+- name: Copy loki config
+  ansible.builtin.template:
+    src: loki_config.yml.j2
+    dest: "{{ loki_config_file_path }}"
+    owner: "{{ service_identifier }}"
+    group: "{{ service_identifier }}"
+    mode: "0644"
+  notify:
+    - Restart service
+
+- name: Copy loki service file
+  ansible.builtin.template:
+    src: loki.service.j2
+    dest: /etc/systemd/system/{{ service_identifier }}.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Reload service
+    - Restart service

@@ -1,0 +1,6 @@
+---
+prometheus_default_binary_name: prometheus
+prometheus_config_file_name: config.yml
+prometheus_web_config_file_name: web.yml
+prometheus_web_listen_address: 0.0.0.0:{{ prometheus.ports.web_listen_address }}
+prometheus_alert_manager_url: localhost:{{ alert_manager.ports.web_external_port }}

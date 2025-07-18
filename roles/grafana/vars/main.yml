@@ -1,0 +1,7 @@
+---
+grafana_config_file_name: defaults.ini
+
+grafana_default_binary_name: grafana
+
+grafana_plugins:
+  - camptocamp-prometheus-alertmanager-datasource
