@@ -2,6 +2,8 @@
 
 This Ansible playbook automates the deployment and configuration of Solana Monitoring Tools. It ensures that the necessary dependencies, configuration files, and services are properly set up and running.
 
+**Note**: The Solana exporter used in this project is based on the open-source work from [qskyhigh/solana-monitor-public](https://github.com/qskyhigh/solana-monitor-public). All credit goes to the original author for making this available to the community.
+
 ## Table of Contents
 
 - [Requirements](#requirements)
