@@ -1,6 +1,5 @@
 ---
-org: encapsulate
-system_arch: linux-amd64
+org: # Enter your organization name, eg: encapsulate
 tmp_dir: /tmp
 
 domain_regex: ^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$

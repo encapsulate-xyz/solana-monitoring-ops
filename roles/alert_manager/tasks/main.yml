@@ -9,6 +9,7 @@
 - name: Include Download, Unarchive and Copy Binary task
   ansible.builtin.include_tasks: tasks/extract_binary.yml
   vars:
+    system_arch: "{{ ansible_system | lower }}-{{ architecture_map[ansible_architecture] }}"
     extracted_binary_dir: "{{ alert_manager_default_binary_name }}-{{ alert_manager.version }}.{{ system_arch }}"
     source_url: "{{ alert_manager.source_url }}/v{{ alert_manager.version }}"
     suffix_url: "{{ alert_manager_default_binary_name }}-{{ alert_manager.version }}.{{ system_arch }}.{{ alert_manager.file_extension }}"

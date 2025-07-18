@@ -17,6 +17,7 @@
 - name: Include Download, Unarchive and Copy Binary task
   ansible.builtin.include_tasks: tasks/extract_binary.yml
   vars:
+    system_arch: "{{ ansible_system | lower }}-{{ architecture_map[ansible_architecture] }}"
     extracted_binary_dir: "{{ prometheus_default_binary_name }}-{{ prometheus.version }}.{{ system_arch }}"
     source_url: "{{ prometheus.source_url }}/v{{ prometheus.version }}"
     suffix_url: "{{ prometheus_default_binary_name }}-{{ prometheus.version }}.{{ system_arch }}.{{ prometheus.file_extension }}"
