@@ -140,10 +140,10 @@ This playbook allows customization through several variables. You can define the
 | `solana_exporter.service_identifier`     | `solana-exporter`                            | Service ID. |
 | `solana_exporter.source_url`             | `https://github.com/qskyhigh/solana-monitor-public` | GitHub source. |
 | `solana_exporter.ports.metric_port`      | `1234`                                       | Exported metrics port. |
-| `solana_exporter.validator_rpc_endpoint` | `http://localhost:8899`                      | Validator RPC endpoint. |
-| `solana_exporter.network_rpc_endpoint`   | `https://api.testnet.solana.com`             | External RPC endpoint. |
-| `solana_exporter.pub_key`                | *(set this)*                                 | Validator public key. |
-| `solana_exporter.vote_pub_key`           | *(set this)*                                 | Vote account public key. |
+| `solana_exporter.validator_rpc_endpoint` | `http://localhost:8899`                      | Solana Validator RPC endpoint. |
+| `solana_exporter.network_rpc_endpoint`   | `https://api.testnet.solana.com`             | Solana External RPC endpoint. |
+| `solana_exporter.pub_key`                | *(set this)*                                 | Solana Validator public key. |
+| `solana_exporter.vote_pub_key`           | *(set this)*                                 | Solana Vote account public key. |
 | `solana_exporter.solana_binary_path`     | `/opt/solana/bin/solana-cli`                 | Path to Solana CLI binary. |
 
 - **`group_vars/default.yml`**: Contains service version variables.
