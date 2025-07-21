@@ -1,0 +1,74 @@
+groups:
+  - name: "Solana Node Alerts"
+    rules:
+      - alert: SolanaNodeHighSkipRate
+        expr: solana_val_skip_rate >= 8
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Solana Validator Skip Rate is Very High"
+          description: "The solana validator node validator skip rate has reached above 8%."
+
+      - alert: SolanaNodeHighSkipRateDiff
+        expr: solana_val_skip_rate >= 5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Solana Validator Skip Rate Difference is Very High"
+          description: "The solana validator node validator skip rate difference is above 5%."
+
+      - alert: SolanaNodeIdentityAccountLowBalance
+        expr: solana_account_balance <= 25
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low Identity Account Balance Detected"
+          description: "The solana validator node identity account balance is less than 25 SOL."
+      
+      - alert: SolanaNodeIdentityAccountBalanceDepleted
+        expr: solana_account_balance <= 8
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Validator Identity Account Balance is Critically Low"
+          description: "The solana validator node identity account balance is below 8 SOL."
+
+      - alert: SolanaNodeSlotLag
+        expr: solana_slot_diff >= 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Solana Node Slot Lag Detected"
+          description: "The solana validator node is behind the network slots."
+
+      - alert: SolanaValidatorBlockHeightLag
+        expr: solana_block_height_diff >= 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Solana Node Block Height Lag Detected"
+          description: "The solana validator node's block height is behind the network block height."
+
+      - alert: SolanaValidatorVoteHeightLag
+        expr: solana_vote_height_diff >= 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Solana Node Vote Height Lag Detected"
+          description: "The solana validator node's vote height is behind the network vote height."
+
+      - alert: SolanaNodeLowVoteCreditsPerSecond
+        expr: rate(solana_vote_credits[5m]) <= 20
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Vote Credits/sec Critically Low"
+          description: "The solana validator node is producing less than 20 vote credits per second over the last 5 minutes."
